@@ -5,109 +5,51 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: rprieur <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/18 20:28:58 by rprieur           #+#    #+#             */
-/*   Updated: 2025/11/18 20:29:00 by rprieur          ###   ########.fr       */
+/*   Created: 2025/11/27 18:05:40 by rprieur           #+#    #+#             */
+/*   Updated: 2025/11/27 18:05:41 by rprieur          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf.h"
+#include "includes/fdf.h"
 
 t_vec2	project_iso(t_cam *cam, t_vec3 p)
 {
-	const t_vec3	d = vec3_sub(p, cam->focus);
-	const float		rx = d.x * cam->hrot.cos - d.y * cam->hrot.sin;
-	const float		ry = d.x * cam->hrot.sin + d.y * cam->hrot.cos;
+	const t_vec3	d = vec3_sub(p, vec3f_round(cam->focus));
+	const float		rx = d.x * cosf(cam->rotation.x)
+		- d.y * sinf(cam->rotation.x);
+	const float		ry = d.x * sinf(cam->rotation.x)
+		+ d.y * cosf(cam->rotation.x);
 	t_vec2			proj;
 
 	proj = vec2_new(cam->disp.x, cam->disp.y);
 	proj.x += rx * cam->matrix[0][0] * cam->zoom;
-	proj.y += rx * cam->matrix[0][1] * cam->zoom;
+	proj.y += rx * cam->matrix[0][1] * cosf(cam->rotation.y) * cam->zoom;
 	proj.x += ry * cam->matrix[1][0] * cam->zoom;
-	proj.y += ry * cam->matrix[1][1] * cam->zoom;
+	proj.y += ry * cam->matrix[1][1] * cosf(cam->rotation.y) * cam->zoom;
 	proj.x += (p.z - cam->focus.z) * cam->matrix[2][0] * cam->zoom
 		* cam->height_mod;
-	proj.y += (p.z - cam->focus.z) * cam->matrix[2][1] * cam->zoom
-		* cam->height_mod;
+	proj.y += (p.z - cam->focus.z) * cam->matrix[2][1] * sinf(cam->rotation.y)
+		* cam->zoom * cam->height_mod;
 	return (proj);
 }
 
-static mlx_color	get_line_color(t_grid *grid, int pi1, int pi2)
+mlx_color	*get_line_color_region(t_context *context, int pi1, int pi2)
 {
-	if (grid->grid[pi1] > grid->grid[pi2])
-	{
-		if (grid->colors[pi1] != NULL_COLOR)
-			return (color(grid->colors[pi1]));
-		if (grid->colors[pi2] != NULL_COLOR)
-			return (color(grid->colors[pi2]));
-	}
-	else
-	{
-		if (grid->colors[pi2] != NULL_COLOR)
-			return (color(grid->colors[pi2]));
-		if (grid->colors[pi1] != NULL_COLOR)
-			return (color(grid->colors[pi1]));
-	}
-	return (color_lerp(color(LOW_LINE_COLOR), color(HIGH_LINE_COLOR),
-			normalize_z(grid, (float)(grid->grid[pi1] + grid->grid[pi2]) / 2)));
-}
+	const mlx_color	col = color_lerp(context->grid.colors[pi1].color,
+			context->grid.colors[pi2].color, 0.5);
+	mlx_color		*buffer;
+	int				i;
 
-static void	draw_grid_forward(t_context *context)
-{
-	int		i;
-	t_vec3	pos;
-
+	buffer = malloc(sizeof(mlx_color) * context->line_size);
 	i = 0;
-	while (i < context->grid.size)
-	{
-		pos = get_cell_at_i(&context->grid, i);
-		context->proj_grid[i] = project_iso(&context->cam, pos);
-		if (pos.x > 0 && (point_on_screen(context, context->proj_grid[i])
-				|| point_on_screen(context, context->proj_grid[i - 1])))
-			line_put(context, context->proj_grid[i], context->proj_grid[i - 1],
-				get_line_color(&context->grid, i, i - 1));
-		if (pos.y > 0 && (point_on_screen(context, context->proj_grid[i])
-				|| point_on_screen(context,
-					context->proj_grid[i - context->grid.width])))
-			line_put(context, context->proj_grid[i],
-				context->proj_grid[i - context->grid.width],
-				get_line_color(&context->grid, i, i - context->grid.width));
-		i++;
-	}
+	while (i < context->line_size)
+		buffer[i++] = col;
+	return (buffer);
 }
 
-static void	draw_grid_backward(t_context *context)
+bool	should_cull_line(t_ncontext *nacho, t_vec2 p1, t_vec2 p2)
 {
-	int		i;
-	t_vec3	pos;
-
-	i = context->grid.size - 1;
-	while (i >= 0)
-	{
-		pos = get_cell_at_i(&context->grid, i);
-		context->proj_grid[i] = project_iso(&context->cam, pos);
-		if (pos.x + 1 < context->grid.width
-			&& (point_on_screen(context, context->proj_grid[i])
-				|| point_on_screen(context, context->proj_grid[i + 1])))
-			line_put(context, context->proj_grid[i], context->proj_grid[i + 1],
-				get_line_color(&context->grid, i, i + 1));
-		if (pos.y + 1 < context->grid.height
-			&& (point_on_screen(context, context->proj_grid[i])
-				|| point_on_screen(context,
-					context->proj_grid[i + context->grid.width])))
-			line_put(context, context->proj_grid[i],
-				context->proj_grid[i + context->grid.width],
-				get_line_color(&context->grid, i, i + context->grid.width));
-		i--;
-	}
-}
-
-void	draw_grid(t_context *context)
-{
-	if (context->grid.size <= 0)
-		return ;
-	if (context->cam.hrot.angle >= M_PI_4
-		&& context->cam.hrot.angle < M_PI + M_PI_4)
-		draw_grid_backward(context);
-	else
-		draw_grid_forward(context);
+	return ((p1.x < 0 && p2.x < 0) || (p1.y < 0 && p2.y < 0)
+		|| (p1.x >= nacho->viewport.width && p2.x >= nacho->viewport.width)
+		|| (p1.y >= nacho->viewport.height && p2.y >= nacho->viewport.height));
 }

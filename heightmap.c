@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf.h"
+#include "includes/fdf.h"
 
 void	toggle_heightmap(t_context *context)
 {
@@ -24,31 +24,38 @@ void	toggle_heightmap(t_context *context)
 		mlx_mouse_hide(context->nacho->mlx);
 }
 
-t_heightmap	make_heightmap(t_context *context)
+void	update_heightmap_colors(t_context *context, mlx_image image)
 {
-	t_heightmap	heightmap;
-	mlx_color	*img;
+	mlx_color	*buffer;
 	int			i;
 
-	heightmap.img = mlx_new_image(context->nacho->mlx,
-			context->grid.width, context->grid.height);
-	img = malloc(sizeof(mlx_color) * context->grid.size);
-	if (!img)
-		exit_mlx(context);
+	buffer = malloc(sizeof(mlx_color) * context->grid.size);
+	if (!buffer)
+		exit_mlx(context, 1, "ERROR: memory error during heightmap refresh");
 	i = 0;
 	while (i < context->grid.size)
 	{
-		img[i] = normalize_z_color(&context->grid, context->grid.grid[i]);
+		buffer[i] = normalize_z_color(&context->grid, context->grid.grid[i]);
 		i++;
 	}
-	mlx_set_image_region(context->nacho->mlx, heightmap.img, 0, 0,
-		context->grid.width, context->grid.height, img);
+	mlx_set_image_region(context->nacho->mlx, image, 0, 0,
+		context->grid.width, context->grid.height, buffer);
+	free(buffer);
+}
+
+t_heightmap	make_heightmap(t_context *context)
+{
+	t_heightmap	heightmap;
+
+	heightmap.img = mlx_new_image(context->nacho->mlx,
+			context->grid.width, context->grid.height);
+	update_heightmap_colors(context, heightmap.img);
 	heightmap.zoom = fmin((float)context->nacho->viewport.width
 			/ context->grid.width, (float)context->nacho->viewport.height
 			/ context->grid.height) * 0.8;
-	heightmap.dispx = 0;
-	heightmap.dispy = 0;
-	heightmap.focus = vec2_new(0, 0);
+	heightmap.disp.x = 0;
+	heightmap.disp.y = 0;
+	heightmap.focus = vec3_new(0, 0, 0);
 	return (heightmap);
 }
 
@@ -57,18 +64,20 @@ static void	update_focus(t_context *context)
 	context->heightmap.focus.x = min(max((context->nacho->inputs.mouse.x
 					- (context->nacho->viewport.width / 2
 						- (((float)context->grid.width / 2
-								+ context->heightmap.dispx)
+								+ context->heightmap.disp.x)
 							* context->heightmap.zoom)))
 				/ context->heightmap.zoom, 0), context->grid.width - 1);
 	context->heightmap.focus.y = min(max((context->nacho->inputs.mouse.y
 					- (context->nacho->viewport.height / 2
 						- (((float)context->grid.height / 2
-								+ context->heightmap.dispy)
+								+ context->heightmap.disp.y)
 							* context->heightmap.zoom)))
 				/ context->heightmap.zoom, 0), context->grid.height - 1);
+	context->heightmap.focus.z = *get_cell(&context->grid,
+			context->heightmap.focus.x, context->heightmap.focus.y);
 }
 
-void	update_heightmap(t_context *context)
+void	update_heightmap_focus(t_context *context)
 {
 	mlx_color	col;
 
@@ -76,9 +85,9 @@ void	update_heightmap(t_context *context)
 			context->heightmap.focus.x, context->heightmap.focus.y);
 	col.g = col.r;
 	col.b = col.r;
-	update_focus(context);
 	mlx_set_image_pixel(context->nacho->mlx, context->heightmap.img,
 		context->heightmap.focus.x, context->heightmap.focus.y, col);
+	update_focus(context);
 	col = mlx_get_image_pixel(context->nacho->mlx, context->heightmap.img,
 			context->heightmap.focus.x, context->heightmap.focus.y);
 	col.g = 0x00;

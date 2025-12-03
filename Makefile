@@ -12,15 +12,20 @@
 
 CC := cc
 CFLAGS := -Wall -Wextra -Werror
-AR := ar rcs
 
-NAME := fdf.a
+NAME := fdf
 
-SRCF := main \ parsing \ parseutils \ utils \ gridutils
+LIB := nacho/nacho.a nacho/MacroLibX-2.2.2/libmlx.so
+LIBFLAGS := -lSDL2 -lm
+
+SRCF := camera exit fps grid heightmap heightmap_inputs init inputs keyboard_inputs \
+		line main monitoring_overlay parsing projection rendering \
+		utils/gridutils utils/mathutils utils/mlxutils \
+		utils/nbrutils utils/parseutils utils/strutils
 
 SRC := $(addsuffix .c, $(SRCF))
 
-HDR := fdf.h
+HDR :=	includes
 
 OBJDIR := objs/
 OBJ := $(addprefix $(OBJDIR), $(SRC:.c=.o))
@@ -28,17 +33,18 @@ OBJ := $(addprefix $(OBJDIR), $(SRC:.c=.o))
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	$(AR) $(NAME) $(OBJ)
+	$(CC) $(OBJ) $(LIB) $(LIBFLAGS) -o $(NAME)
 
 $(OBJDIR)%.o: %.c | $(OBJDIR)
 	$(CC) -c $(CFLAGS) -I $(HDR) $< -o $@
 
 $(OBJDIR):
 	mkdir $(OBJDIR)
+	mkdir $(OBJDIR)/utils
 
 clean:
 	rm -f $(OBJ)
-	rm -df $(OBJDIR)
+	rm -rf $(OBJDIR)
 
 fclean: clean
 	rm -f $(NAME)

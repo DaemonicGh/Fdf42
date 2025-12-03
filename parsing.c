@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf.h"
+#include "includes/fdf.h"
 
 static int	get_grid_width(const char *str)
 {
@@ -70,9 +70,9 @@ static void	fill_grid(const char *str, t_grid *grid)
 		while (str[i] >= '0' && str[i] <= '9')
 			i++;
 		if (str[i] == ',')
-			grid->colors[j] = ahextocol(str + ++i);
+			grid->colors[j] = (t_gridcolor){color(ahextocol(str + ++i)), true};
 		else
-			grid->colors[j] = NULL_COLOR;
+			grid->colors[j] = (t_gridcolor){color(0x0), false};
 		j++;
 		while (str[i] && str[i] != ' ' && (str[i] < 9 || str[i] > 13))
 			i++;
@@ -84,13 +84,17 @@ t_grid	get_grid(char *file)
 	const char	*str = read_all(open(file, O_RDONLY));
 	t_grid		grid;
 
+	if (!str)
+		put_exit(1, "ERROR: Couldn't parse given file!");
 	get_grid_size(str, &grid);
 	grid.grid = malloc(sizeof(int) * grid.size);
-	grid.colors = malloc(sizeof(unsigned int) * grid.size);
+	grid.colors = malloc(sizeof(t_gridcolor) * grid.size);
 	if (!grid.grid && !grid.colors)
 		return (grid);
 	grid.min = INT_MAX;
 	grid.max = INT_MIN;
 	fill_grid(str, &grid);
+	color_grid(&grid, color(LOW_LINE_COLOR), color(HIGH_LINE_COLOR));
+	free((char *)str);
 	return (grid);
 }

@@ -10,54 +10,36 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf.h"
-#include "nacho/nacho.h"
+#include "includes/fdf.h"
 
 static void	heightmap_update(t_context *context)
 {
-	char	str[80];
-
 	mlx_clear_window(context->nacho->mlx, context->nacho->viewport.win,
 		color(HM_BG_COLOR));
-	update_heightmap(context);
+	update_heightmap_focus(context);
 	mlx_put_transformed_image_to_window(context->nacho->mlx,
 		context->nacho->viewport.win, context->heightmap.img,
 		context->nacho->viewport.width / 2 - ((float)context->grid.width
-			/ 2 + context->heightmap.dispx) * context->heightmap.zoom,
+			/ 2 + context->heightmap.disp.x) * context->heightmap.zoom,
 		context->nacho->viewport.height / 2
-		- ((float)context->grid.height / 2 + context->heightmap.dispy)
+		- ((float)context->grid.height / 2 + context->heightmap.disp.y)
 		* context->heightmap.zoom,
 		context->heightmap.zoom, context->heightmap.zoom, 0);
-	draw_monitoring_bg(context);
-	make_monitoring_str_hm(context, str);
-	mlx_string_put(context->nacho->mlx, context->nacho->viewport.win, 2, 9,
-		color(TEXT_COLOR), str);
-	mlx_string_put(context->nacho->mlx, context->nacho->viewport.win,
-		context->nacho->viewport.width / 2 - 80,
-		context->nacho->viewport.height - 2, color(TEXT_COLOR),
-		"HEIGHTMAP MODE [TAB]");
+	draw_monitoring_hm(context);
 }
 
 static void	isometric_update(t_context *context)
 {
-	char	str[80];
-
 	mlx_clear_window(context->nacho->mlx, context->nacho->viewport.win,
-		color(ISO_BG_COLOR));
-	update_rotation(context);
+		color_lerp(color(ISO_BG_COLOR), color(ISO_BG_COLOR_DARK),
+			sinf(context->cam.rotation.y * 0.5) * 0.5 + 0.5));
 	draw_grid(context);
-	mlx_put_image_to_window(context->nacho->mlx, context->nacho->viewport.win,
-		context->crosshair, context->nacho->viewport.width / 2 - 7,
-		context->nacho->viewport.height / 2 - 7);
-	draw_monitoring_bg(context);
-	make_monitoring_str_iso(context, str);
-	mlx_string_put(context->nacho->mlx, context->nacho->viewport.win, 2, 9,
-		color(TEXT_COLOR), str);
-	if (!context->nacho->inputs.record_mouse)
-		mlx_string_put(context->nacho->mlx, context->nacho->viewport.win,
-			context->nacho->viewport.width / 2 - 120,
-			context->nacho->viewport.height - 2, color(TEXT_COLOR),
-			"MOUSE RECORDING PAUSED [SPACE]");
+	if (context->nacho->inputs.record_mouse)
+		mlx_put_image_to_window(context->nacho->mlx,
+			context->nacho->viewport.win, context->crosshair,
+			context->nacho->viewport.width / 2 - 8,
+			context->nacho->viewport.height / 2 - 8);
+	draw_monitoring_iso(context);
 }
 
 void	update(void *param)
@@ -66,8 +48,9 @@ void	update(void *param)
 
 	context = param;
 	if (context->nacho->inputs.should_exit)
-		exit_mlx(context);
+		exit_mlx(context, 0, "Exited successfully!");
 	update_inputs(context);
+	update_fps(context);
 	if (context->heightmap_mode)
 		heightmap_update(context);
 	else
@@ -85,11 +68,11 @@ void	init(char *file)
 	t_context	context;
 
 	grid = get_grid(file);
-	if (!grid.grid)
-		exit(1);
-	context = init_window(&grid);
+	if (!grid.grid || !grid.colors)
+		put_exit(1, "ERROR: Memory error during parsing!");
+	context = init_window(&grid, file);
 	nacho_run(context.nacho, update, &context);
-	exit_mlx(&context);
+	exit_mlx(&context, 0, "Exited succesfully!");
 }
 
 int	main(int ac, char **av)

@@ -10,53 +10,21 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf.h"
-#include "nacho/nacho.h"
+#include "includes/fdf.h"
 
-static void	handle_key_inputs(t_context *context)
+static void	handle_scroll(t_context *context)
 {
-	if (context->nacho->inputs.keyp[NACHO_KEY_F11])
+	if (context->nacho->inputs.key[NACHO_KEY_LALT])
 	{
-		if (context->nacho->window.is_fullscreen)
-		{
-			context->nacho->window.is_fullscreen = false;
-			context->nacho->window.width = WINDOW_WIDTH;
-			context->nacho->window.height = WINDOW_HEIGHT;
-		}
-  		else
-			context->nacho->window.is_fullscreen = true;
-  		nacho_refresh_window(context->nacho);
+		update_point(context, vec2_new(roundf(context->cam.focus.x),
+				roundf(context->cam.focus.y)),
+			context->nacho->inputs.mouse_wheel);
 	}
- 	if (context->nacho->inputs.keyp[NACHO_KEY_F10])
-  		nacho_center_window(context->nacho);
-	if (context->nacho->inputs.keyp[NACHO_KEY_ESCAPE])
-		exit_mlx(context);
-	if (context->nacho->inputs.keyp[NACHO_KEY_TAB])
-		toggle_heightmap(context);
-	if (context->heightmap_mode)
-		handle_heightmap_movement(context);
-	else if (context->nacho->inputs.keyp[NACHO_KEY_SPACE])
+	else if (context->nacho->inputs.key[NACHO_KEY_LCTRL])
 	{
-		context->nacho->inputs.record_mouse
-			= !context->nacho->inputs.record_mouse;
-		nacho_warp_mouse(context->nacho, context->nacho->viewport.width / 2,
-			context->nacho->viewport.height / 2);
-	}
-	else if (context->nacho->inputs.key[NACHO_KEY_LSHIFT]
-		|| !(context->nacho->frame_elapsed % 3))
-		handle_camera_movement(context);
-}
-
-static void	handle_mouse_inputs(t_context *context)
-{
-	if (context->heightmap_mode)
-		handle_heightmap_zoom(context);
-	else if (context->nacho->inputs.key[NACHO_KEY_LALT])
-	{
-		if (context->nacho->inputs.mouse_wheel > 0)
-			context->cam.height_mod *= HEIGHT_MOD_AMPLIFIER;
-		if (context->nacho->inputs.mouse_wheel < 0)
-			context->cam.height_mod /= HEIGHT_MOD_AMPLIFIER;
+		update_point(context, vec2_new(roundf(context->cam.focus.x),
+				roundf(context->cam.focus.y)),
+			context->nacho->inputs.mouse_wheel * 10);
 	}
 	else
 	{
@@ -69,8 +37,34 @@ static void	handle_mouse_inputs(t_context *context)
 	}
 }
 
+static void	handle_mouse_inputs(t_context *context)
+{
+	if (context->heightmap_mode)
+	{
+		handle_heightmap_scroll(context);
+		return ;
+	}
+	if (context->nacho->inputs.btn[NACHO_BUTTON_LEFT])
+		context->cam.rotation.y = roundf(clamp(context->cam.rotation.y,
+					0, M_PI) / M_PI_4) * M_PI_4;
+	if (context->nacho->inputs.btn[NACHO_BUTTON_RIGHT])
+		context->cam.rotation.x = roundf(loop(context->cam.rotation.x,
+					0, M_PI * 2) / M_PI_4) * M_PI_4;
+	if (context->nacho->inputs.btn[NACHO_BUTTON_MIDDLE])
+	{
+		context->cam.rotation.x = roundf(loop(context->cam.rotation.x + M_PI_4,
+					0, M_PI * 2) / M_PI_2) * M_PI_2 - M_PI_4;
+		if (context->cam.rotation.y >= M_PI_2)
+			context->cam.rotation.y = M_PI_2 + 0.61548;
+		else
+			context->cam.rotation.y = M_PI_2 - 0.61548;
+	}
+	handle_scroll(context);
+}
+
 void	update_inputs(t_context *context)
 {
+	update_rotation(context);
 	handle_key_inputs(context);
 	handle_mouse_inputs(context);
 }
