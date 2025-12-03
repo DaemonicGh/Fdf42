@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../nacho.h"
+#include "../includes/nacho.h"
 
 void	nacho_flush_inputs(t_ncontext *nacho)
 {

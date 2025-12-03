@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf.h"
+#include "includes/fdf.h"
 
 static void	iso_config_key_inputs(t_context *context)
 {
@@ -30,10 +30,10 @@ static void	iso_config_key_inputs(t_context *context)
 		context->line_size = max(context->line_size - 1, 1);
 	if (context->nacho->inputs.key[NACHO_KEY_T])
 		context->cam.height_mod *= 1
-			+ context->nacho->deltatime * HEIGHT_MOD_AMPLIFIER;
+			+ context->nacho->delta_time * HEIGHT_MOD_AMPLIFIER;
 	if (context->nacho->inputs.key[NACHO_KEY_G])
 		context->cam.height_mod /= 1
-			+ context->nacho->deltatime * HEIGHT_MOD_AMPLIFIER;
+			+ context->nacho->delta_time * HEIGHT_MOD_AMPLIFIER;
 }
 
 static void	iso_key_inputs(t_context *context)

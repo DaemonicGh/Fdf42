@@ -14,10 +14,10 @@
 
 static void	move_cam(t_context *context, t_vec2f disp, int speed)
 {
-	context->cam.focus.x += disp.x * context->nacho->deltatime * speed;
-	context->cam.focus.y += disp.y * context->nacho->deltatime * speed;
+	context->cam.focus.x += disp.x * context->nacho->delta_time * speed;
+	context->cam.focus.y += disp.y * context->nacho->delta_time * speed;
 	if (AUTO_CAMERA_HEIGHT)
-		context->cam.focus.z = *get_cell(&context->grid,
+		context->cam.focus.z = get_cell(&context->grid,
 				roundf(context->cam.focus.x), roundf(context->cam.focus.y));
 }
 

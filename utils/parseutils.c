@@ -40,7 +40,7 @@ unsigned int	ahextocol(const char *str)
 	return (nbr << 8 | 0xFF);
 }
 
-char	*allocdstrjoin(char *str1, char *str2)
+static char	*allocdstrjoin(char *str1, char *str2, int str2len)
 {
 	char	*newstr;
 	size_t	i;
@@ -52,7 +52,7 @@ char	*allocdstrjoin(char *str1, char *str2)
 		return (str2);
 	if (!str2)
 		return (str1);
-	newstr = malloc(ft_strlen(str1) + ft_strlen(str2) + 1);
+	newstr = malloc(ft_strlen(str1) + str2len + 1);
 	if (!newstr)
 		return (NULL);
 	i = 0;
@@ -88,7 +88,9 @@ char	*read_all(int fd)
 		if (len <= 0)
 			break ;
 		buf[len] = 0;
-		str = allocdstrjoin(str, buf);
+		str = allocdstrjoin(str, buf, len);
+		if (len < READ_BUFFER_SIZE * size_mod)
+			return (str);
 		size_mod *= 2;
 	}
 	free(buf);

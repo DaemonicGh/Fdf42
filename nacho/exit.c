@@ -10,15 +10,12 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "nacho.h"
+#include "includes/nacho.h"
 
-void	nacho_exit(t_ncontext *nacho, int exit_code)
+void	nacho_exit(t_ncontext *nacho)
 {
 	mlx_loop_end(nacho->mlx);
 	mlx_destroy_window(nacho->mlx, nacho->window.win);
 	mlx_destroy_context(nacho->mlx);
 	free(nacho);
-	if (exit_code < 0)
-		return ;
-	exit(exit_code);
 }

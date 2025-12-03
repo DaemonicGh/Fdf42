@@ -16,13 +16,12 @@ static t_cam	init_camera(t_context *context)
 {
 	t_cam	cam;
 
-	cam = (t_cam){.matrix = {{1.0, 0.0}, {0.0, 1.0}, {0.0, -1.0}}};
 	cam.rotation = vec3f_new(0, 0, 0);
 	cam.disp = vec2_new(context->nacho->viewport.width / 2,
 			context->nacho->viewport.height / 2);
 	cam.zoom = 12.0;
 	cam.focus = vec3f_new(context->grid.width / 2, context->grid.height / 2,
-			*get_cell(&context->grid, context->grid.width / 2,
+			get_cell(&context->grid, context->grid.width / 2,
 				context->grid.height / 2));
 	cam.height_mod = (float)context->grid.width
 		/ (context->grid.max - context->grid.min) * 0.1;

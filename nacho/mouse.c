@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "nacho.h"
+#include "includes/nacho.h"
 
 void	nacho_warp_mouse(t_ncontext *nacho, int x, int y)
 {

@@ -120,16 +120,30 @@ static void	draw_grid_leftward(t_context *context)
 
 void	draw_grid(t_context *context)
 {
-	if (context->grid.size <= 0)
-		return ;
-	if (context->cam.rotation.x < M_PI_2)
-		draw_grid_forward(context);
-	else if (context->cam.rotation.x >= M_PI_2
-		&& context->cam.rotation.x < M_PI)
-		draw_grid_rightward(context);
-	else if (context->cam.rotation.x >= M_PI
-		&& context->cam.rotation.x < M_PI + M_PI_2)
-		draw_grid_backward(context);
-	else
-		draw_grid_leftward(context);
+	if (context->line_size == 1)
+	{
+		if (context->cam.rotation.x < M_PI_2)
+			draw_grid_forward(context);
+		else if (context->cam.rotation.x >= M_PI_2
+			&& context->cam.rotation.x < M_PI)
+			draw_grid_rightward(context);
+		else if (context->cam.rotation.x >= M_PI
+			&& context->cam.rotation.x < M_PI + M_PI_2)
+			draw_grid_backward(context);
+		else
+			draw_grid_leftward(context);
+	}
+ 	else
+	{
+		if (context->cam.rotation.x < M_PI_2)
+			draw_grid_forward(context);
+		else if (context->cam.rotation.x >= M_PI_2
+			&& context->cam.rotation.x < M_PI)
+			draw_grid_rightward(context);
+		else if (context->cam.rotation.x >= M_PI
+			&& context->cam.rotation.x < M_PI + M_PI_2)
+			draw_grid_backward(context);
+		else
+			draw_grid_leftward(context);
+	}
 }

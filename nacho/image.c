@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "nacho.h"
+#include "includes/nacho.h"
 
 t_nimage	nacho_make_image(t_ncontext *nacho, int width, int height)
 {

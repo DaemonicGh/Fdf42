@@ -24,7 +24,8 @@
 # include "fdf_constants.h"
 # include "fdf_structs.h"
 
-int				*get_cell(t_grid *grid, int x, int y);
+int				get_cell(t_grid *grid, int x, int y);
+int				*get_cell_p(t_grid *grid, int x, int y);
 t_vec3			get_cell_at_i(t_grid *grid, int i);
 float			normalize_z(t_grid *grid, float z);
 mlx_color		normalize_z_color(t_grid *grid, float z);
@@ -80,8 +81,8 @@ int				ft_itostr(int nbr, char *str);
 char			*setstr(char *str, char *section, int pos);
 
 unsigned int	ahextocol(const char *str);
-char			*allocdstrjoin(char *str1, char *str2);
 char			*read_all(int fd);
 t_grid			get_grid(char *file);
+void			save_grid(t_context *context);
 
 #endif

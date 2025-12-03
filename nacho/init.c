@@ -10,14 +10,16 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "nacho.h"
+#include "includes/nacho.h"
 
 static void	flush_inputs(t_ncontext *nacho)
 {
 	int	i;
 
-	mlx_mouse_get_pos(nacho->mlx,
-		&nacho->inputs.mouse.x, &nacho->inputs.mouse.y);
+	mlx_mouse_move(nacho->mlx, nacho->window.win,
+		nacho->window.width / 2, nacho->window.height / 2);
+	nacho->inputs.mouse.x = nacho->window.width / 2;
+	nacho->inputs.mouse.y = nacho->window.height / 2;
 	nacho->inputs.prev_mouse = nacho->inputs.mouse;
 	i = 0;
 	while (i < NACHO_KEY_SCANCODE_LENGTH)
@@ -42,5 +44,6 @@ t_ncontext	*nacho_init(t_vec2 win_size, char *win_title, int win_mode)
 	flush_inputs(nacho);
 	nacho_start_events(nacho);
 	nacho->frame_elapsed = 0;
+	nacho->delta_time = 0.05;
 	return (nacho);
 }

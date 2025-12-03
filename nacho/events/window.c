@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../nacho.h"
+#include "../includes/nacho.h"
 
 void	window_hook(int event, void *param)
 {

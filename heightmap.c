@@ -73,7 +73,7 @@ static void	update_focus(t_context *context)
 								+ context->heightmap.disp.y)
 							* context->heightmap.zoom)))
 				/ context->heightmap.zoom, 0), context->grid.height - 1);
-	context->heightmap.focus.z = *get_cell(&context->grid,
+	context->heightmap.focus.z = get_cell(&context->grid,
 			context->heightmap.focus.x, context->heightmap.focus.y);
 }
 

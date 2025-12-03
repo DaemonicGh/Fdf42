@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "nacho.h"
+#include "includes/nacho.h"
 
 t_nwindow	nacho_make_window(t_ncontext *nacho,
 		t_vec2 size, char *title, int mode)
@@ -60,5 +60,4 @@ void	nacho_center_window(t_ncontext *nacho)
 	mlx_get_screen_size(nacho->mlx, nacho->window.win, &screen.x, &screen.y);
  	mlx_set_window_position(nacho->mlx, nacho->window.win,
 		screen.x / 2 - nacho->window.width / 2, screen.y / 2 - nacho->window.height / 2);
-
 }

@@ -22,15 +22,15 @@ static void	handle_heightmap_mouse(t_context *context)
 				- context->nacho->inputs.mouse.y) / context->heightmap.zoom;
 	}
 	if (context->nacho->inputs.btnp[NACHO_BUTTON_LEFT])
-	{
 		update_point(context, vec2_new(context->heightmap.focus.x,
-				context->heightmap.focus.y), 1);
-	}
+				context->heightmap.focus.y), 1
+					* (10 * context->nacho->inputs.key[NACHO_KEY_LALT])
+					* (100 * context->nacho->inputs.key[NACHO_KEY_LCTRL]));
 	else if (context->nacho->inputs.btnp[NACHO_BUTTON_RIGHT])
-	{
 		update_point(context, vec2_new(context->heightmap.focus.x,
-				context->heightmap.focus.y), -1);
-	}
+				context->heightmap.focus.y), -1
+					* (10 * context->nacho->inputs.key[NACHO_KEY_LALT])
+					* (100 * context->nacho->inputs.key[NACHO_KEY_LCTRL]));
 }
 
 void	handle_heightmap_movement(t_context *context)

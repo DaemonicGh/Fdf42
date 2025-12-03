@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "nacho.h"
+#include "includes/nacho.h"
 
 void	nacho_start_frame(t_ncontext *nacho)
 {
@@ -30,15 +30,21 @@ void	nacho_start_frame(t_ncontext *nacho)
 void	nacho_end_frame(t_ncontext *nacho)
 {
 	nacho_flush_inputs(nacho);
- 	//nacho_refresh_window(nacho);
+ 	nacho_refresh_window(nacho);
 	nacho->frame_elapsed++;
 }
 
 static void	nacho_loop(void *rawcontext)
 {
+	static struct timeval	start;
+ 	static struct timeval	end;
 	t__nloopcontext	*context;
 
 	context = rawcontext;
+	gettimeofday(&end, NULL);
+	context->nacho->delta_time = (float)(end.tv_sec - start.tv_sec)
+		+ (float)(end.tv_usec - start.tv_usec) / 1000000;
+	gettimeofday(&start, NULL);
 	nacho_start_frame(context->nacho);
 	context->update(context->args);
 	nacho_end_frame(context->nacho);

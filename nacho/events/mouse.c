@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../nacho.h"
+#include "../includes/nacho.h"
 
 void	mouse_down_hook(int button, void *param)
 {

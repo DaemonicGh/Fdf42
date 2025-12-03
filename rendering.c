@@ -15,21 +15,12 @@
 t_vec2	project_iso(t_cam *cam, t_vec3 p)
 {
 	const t_vec3	d = vec3_sub(p, vec3f_round(cam->focus));
-	const float		rx = d.x * cosf(cam->rotation.x)
-		- d.y * sinf(cam->rotation.x);
-	const float		ry = d.x * sinf(cam->rotation.x)
-		+ d.y * cosf(cam->rotation.x);
 	t_vec2			proj;
 
-	proj = vec2_new(cam->disp.x, cam->disp.y);
-	proj.x += rx * cam->matrix[0][0] * cam->zoom;
-	proj.y += rx * cam->matrix[0][1] * cosf(cam->rotation.y) * cam->zoom;
-	proj.x += ry * cam->matrix[1][0] * cam->zoom;
-	proj.y += ry * cam->matrix[1][1] * cosf(cam->rotation.y) * cam->zoom;
-	proj.x += (p.z - cam->focus.z) * cam->matrix[2][0] * cam->zoom
-		* cam->height_mod;
-	proj.y += (p.z - cam->focus.z) * cam->matrix[2][1] * sinf(cam->rotation.y)
-		* cam->zoom * cam->height_mod;
+	proj = cam->disp;
+	proj.x += (d.x * cosf(cam->rotation.x) - d.y * sinf(cam->rotation.x)) * cam->zoom;
+	proj.y += (d.x * sinf(cam->rotation.x) + d.y * cosf(cam->rotation.x)) * cosf(cam->rotation.y) * cam->zoom;
+	proj.y -= (p.z - cam->focus.z) * sinf(cam->rotation.y) * cam->zoom * cam->height_mod;
 	return (proj);
 }
 

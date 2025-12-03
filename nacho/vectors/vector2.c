@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "nacho.h"
+#include "../includes/nacho.h"
 
 t_vec2	vec2_new(int x, int y)
 {

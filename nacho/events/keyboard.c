@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../nacho.h"
+#include "../includes/nacho.h"
 
 void	key_down_hook(int key, void *param)
 {

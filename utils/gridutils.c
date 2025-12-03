@@ -12,10 +12,17 @@
 
 #include "../includes/fdf.h"
 
-int	*get_cell(t_grid *grid, int x, int y)
+int	get_cell(t_grid *grid, int x, int y)
 {
 	if (x < 0 || x >= grid->width || y < 0 || y >= grid->height)
 		return (0);
+	return (grid->grid[y * grid->width + x]);
+}
+
+int	*get_cell_p(t_grid *grid, int x, int y)
+{
+	if (x < 0 || x >= grid->width || y < 0 || y >= grid->height)
+		return (NULL);
 	return (&grid->grid[y * grid->width + x]);
 }
 

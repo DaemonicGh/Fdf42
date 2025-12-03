@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf.h"
+#include "includes/fdf.h"
 
 void	color_grid(t_grid *grid, mlx_color col1, mlx_color col2)
 {
@@ -21,19 +21,17 @@ void	color_grid(t_grid *grid, mlx_color col1, mlx_color col2)
 	{
 		while (i < grid->size)
 		{
-			if (grid->colors[i].is_override)
-				continue ;
-			grid->colors[i++].color = col1;
+			if (!grid->colors[i].is_override)
+				grid->colors[i++].color = col1;
 		}
 	}
 	else
 	{
 		while (i < grid->size)
 		{
-			if (grid->colors[i].is_override)
-				continue ;
-			grid->colors[i].color = color_lerp(col1, col2,
-					normalize_z(grid, grid->grid[i]));
+			if (!grid->colors[i].is_override)
+				grid->colors[i].color = color_lerp(col1, col2,
+						normalize_z(grid, grid->grid[i]));
 			i++;
 		}
 	}
@@ -60,7 +58,9 @@ void	update_point(t_context *context, t_vec2 point, int increment)
 {
 	int	*cell;
 
-	cell = get_cell(&context->grid, point.x, point.y);
+	cell = get_cell_p(&context->grid, point.x, point.y);
+ 	if (!cell)
+   		return ;
 	*cell += increment;
 	update_grid_limits(&context->grid);
 	update_heightmap_colors(context, context->heightmap.img);
@@ -81,5 +81,4 @@ void	save_grid(t_context *context)
    		write(2, "ERROR: Failed to open file when saving!", 39);
   		return ;
 	}
-
 }

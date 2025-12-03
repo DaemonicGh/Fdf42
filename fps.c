@@ -22,7 +22,7 @@ void	update_fps(t_context *context)
 		context->fps_record[i] = context->fps_record[i + 1];
 		i++;
 	}
-	context->fps_record[i] = 1 / context->nacho->deltatime;
+	context->fps_record[i] = 1 / context->nacho->delta_time;
 }
 
 float	average_fps(t_context *context)
