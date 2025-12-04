@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SCANCODES_H
-# define SCANCODES_H
+#ifndef NACHO_SCANCODES_H
+# define NACHO_SCANCODES_H
 
 // Simplified version of SLD2's scancodes
 // [https://wiki.libsdl.org/SDL2/SDL_Scancode]
@@ -19,6 +19,8 @@
 # define NACHO_KEY_SCANCODE_LENGTH 256
 # define NACHO_BUTTON_SCANCODE_LENGTH 5
 # define NACHO_WINDOW_SCANCODE_LENGTH 19
+
+# define NACHO_KEY_NONE 0
 
 # define NACHO_KEY_A 4
 # define NACHO_KEY_B 5
@@ -59,6 +61,7 @@
 # define NACHO_KEY_0 39
 
 # define NACHO_KEY_RETURN 40
+# define NACHO_KEY_ENTER 40
 # define NACHO_KEY_ESCAPE 41
 # define NACHO_KEY_BACKSPACE 42
 # define NACHO_KEY_TAB 43

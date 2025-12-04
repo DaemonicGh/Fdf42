@@ -17,7 +17,7 @@ t_vec3f	vec3f_new(float x, float y, float z)
 	return ((t_vec3f){.x = x, .y = y, .z = z});
 }
 
-t_vec3 vec3f_round(t_vec3f p)
+t_vec3	vec3f_round(t_vec3f p)
 {
 	return ((t_vec3){.x = roundf(p.x), .y = roundf(p.y), .z = roundf(p.z)});
 }

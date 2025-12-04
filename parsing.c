@@ -23,7 +23,9 @@ static int	get_grid_width(const char *str)
 	width = 0;
 	while (str[i] && str[i] != '\n')
 	{
-		if (str[i] == ' ' || (str[i] >= 9 && str[i] <= 13))
+		if (str[i] == ',')
+			prev = 1;
+		else if (str[i] == ' ' || (str[i] >= 9 && str[i] <= 13))
 		{
 			if (!prev)
 				width++;
@@ -51,6 +53,18 @@ static void	get_grid_size(const char *str, t_grid *grid)
 	grid->size = grid->width * grid->height;
 }
 
+static void	handle_colors(const char *str, t_grid *grid, int *i, int *j)
+{
+	if (str[*i] == ',')
+	{
+		grid->colors[*j] = (t_gridcolor){color(ahextocol(str + ++(*i))), true};
+		while (str[*i] == ' ' || (str[*i] >= 9 && str[*i] <= 13))
+			(*i)++;
+	}
+	else
+		grid->colors[*j] = (t_gridcolor){color(0x0), false};
+}
+
 static void	fill_grid(const char *str, t_grid *grid)
 {
 	int	i;
@@ -69,10 +83,7 @@ static void	fill_grid(const char *str, t_grid *grid)
 		grid->max = max(grid->grid[j], grid->max);
 		while (str[i] >= '0' && str[i] <= '9')
 			i++;
-		if (str[i] == ',')
-			grid->colors[j] = (t_gridcolor){color(ahextocol(str + ++i)), true};
-		else
-			grid->colors[j] = (t_gridcolor){color(0x0), false};
+		handle_colors(str, grid, &i, &j);
 		j++;
 		while (str[i] && str[i] != ' ' && (str[i] < 9 || str[i] > 13))
 			i++;

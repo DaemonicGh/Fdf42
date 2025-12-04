@@ -17,7 +17,7 @@ t_vec2f	vec2f_new(float x, float y)
 	return ((t_vec2f){.x = x, .y = y});
 }
 
-t_vec2 vec2f_round(t_vec2f p)
+t_vec2	vec2f_round(t_vec2f p)
 {
 	return ((t_vec2){.x = roundf(p.x), .y = roundf(p.y)});
 }

@@ -34,7 +34,7 @@ static void	isometric_update(t_context *context)
 		color_lerp(color(ISO_BG_COLOR), color(ISO_BG_COLOR_DARK),
 			sinf(context->cam.rotation.y * 0.5) * 0.5 + 0.5));
 	draw_grid(context);
-	if (context->nacho->inputs.record_mouse)
+	if (context->record_mouse)
 		mlx_put_image_to_window(context->nacho->mlx,
 			context->nacho->viewport.win, context->crosshair,
 			context->nacho->viewport.width / 2 - 8,

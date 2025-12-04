@@ -14,7 +14,7 @@
 
 void	toggle_heightmap(t_context *context)
 {
-	context->nacho->inputs.record_mouse = context->heightmap_mode;
+	context->record_mouse = context->heightmap_mode;
 	context->heightmap_mode = !context->heightmap_mode;
 	nacho_warp_mouse(context->nacho, context->nacho->viewport.width / 2,
 		context->nacho->viewport.height / 2);

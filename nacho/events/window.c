@@ -12,6 +12,8 @@
 
 #include "../includes/nacho.h"
 
+#include <stdio.h>
+
 void	window_hook(int event, void *param)
 {
 	t_ncontext	*nacho;
@@ -21,4 +23,5 @@ void	window_hook(int event, void *param)
 	nacho = param;
 	if (event == NACHO_WINDOW_CLOSE)
 		nacho->inputs.should_exit = true;
+	nacho->inputs.window[event] = true;
 }

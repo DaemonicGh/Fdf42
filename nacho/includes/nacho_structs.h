@@ -76,7 +76,7 @@ typedef struct s_nachoinputhandler
 	bool		key[NACHO_KEY_SCANCODE_LENGTH];
 	bool		keyp[NACHO_KEY_SCANCODE_LENGTH];
 	bool		keyr[NACHO_KEY_SCANCODE_LENGTH];
-	bool		record_mouse;
+	int			last_key;
 	t_vec2		mouse;
 	t_vec2		prev_mouse;
 	bool		btn[NACHO_BUTTON_SCANCODE_LENGTH];
@@ -106,7 +106,7 @@ typedef struct s_nachocontext
 	t_nwindow				viewport;
 	t_ninputhandler			inputs;
 	unsigned long			frame_elapsed;
- 	float					delta_time;
+	float					delta_time;
 }	t_ncontext;
 
 typedef struct s__nacholoopcontext

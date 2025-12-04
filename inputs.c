@@ -18,7 +18,8 @@ static void	handle_scroll(t_context *context)
 	{
 		update_point(context, vec2_new(roundf(context->cam.focus.x),
 				roundf(context->cam.focus.y)),
-			context->nacho->inputs.mouse_wheel);
+			context->nacho->inputs.mouse_wheel
+			* (1 + (99 * context->nacho->inputs.key[NACHO_KEY_LCTRL])));
 	}
 	else if (context->nacho->inputs.key[NACHO_KEY_LCTRL])
 	{

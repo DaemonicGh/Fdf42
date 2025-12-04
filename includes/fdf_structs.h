@@ -58,11 +58,13 @@ typedef struct s_context
 	int					line_size;
 	bool				colorize_grid;
 	t_cam				cam;
+	bool				record_mouse;
 	bool				heightmap_mode;
 	t_heightmap			heightmap;
 	float				fps_record[FPS_ARRAY_SIZE];
 	mlx_image			crosshair;
 	char				*file;
+	bool				is_save_success;
 }	t_context;
 
 #endif

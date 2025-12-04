@@ -50,12 +50,14 @@ t_context	init_window(t_grid *grid, char *file)
 	context.line_size = 3;
 	context.colorize_grid = true;
 	context.cam = init_camera(&context);
+	context.record_mouse = true;
 	context.heightmap_mode = false;
 	context.heightmap = make_heightmap(&context);
 	fill_fps_array(context.fps_record, FPS_ARRAY_SIZE);
 	context.crosshair = mlx_new_image_from_file(context.nacho->mlx,
 			"assets/crosshair.png", NULL, NULL);
- 	context.file = file;
+	context.file = file;
+	context.is_save_success = false;
 	mlx_mouse_hide(context.nacho->mlx);
 	mlx_set_fps_goal(context.nacho->mlx, 60);
 	return (context);

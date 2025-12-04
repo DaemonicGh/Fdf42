@@ -19,7 +19,7 @@ LIB := nacho/nacho.a nacho/MacroLibX-2.2.2/libmlx.so
 LIBFLAGS := -lSDL2 -lm
 
 SRCF := camera exit fps grid heightmap heightmap_inputs init inputs keyboard_inputs \
-		line main monitoring_overlay parsing projection rendering \
+		line main overlay overlay_spe parsing projection rendering \
 		utils/gridutils utils/mathutils utils/mlxutils \
 		utils/nbrutils utils/parseutils utils/strutils
 

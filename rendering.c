@@ -18,21 +18,23 @@ t_vec2	project_iso(t_cam *cam, t_vec3 p)
 	t_vec2			proj;
 
 	proj = cam->disp;
-	proj.x += (d.x * cosf(cam->rotation.x) - d.y * sinf(cam->rotation.x)) * cam->zoom;
-	proj.y += (d.x * sinf(cam->rotation.x) + d.y * cosf(cam->rotation.x)) * cosf(cam->rotation.y) * cam->zoom;
-	proj.y -= (p.z - cam->focus.z) * sinf(cam->rotation.y) * cam->zoom * cam->height_mod;
+	proj.x += (d.x * cosf(cam->rotation.x) - d.y * sinf(cam->rotation.x))
+		* cam->zoom;
+	proj.y += (d.x * sinf(cam->rotation.x) + d.y * cosf(cam->rotation.x))
+		* cosf(cam->rotation.y) * cam->zoom;
+	proj.y -= d.z * sinf(cam->rotation.y) * cam->zoom * cam->height_mod;
 	return (proj);
 }
 
-mlx_color	*get_line_color_region(t_context *context, int pi1, int pi2)
+mlx_color	*get_line_color_region(t_context *context,
+		int pi1, int pi2, mlx_color *buffer)
 {
-	const mlx_color	col = color_lerp(context->grid.colors[pi1].color,
-			context->grid.colors[pi2].color, 0.5);
-	mlx_color		*buffer;
-	int				i;
+	mlx_color	col;
+	int			i;
 
-	buffer = malloc(sizeof(mlx_color) * context->line_size);
 	i = 0;
+	col = color_lerp(context->grid.colors[pi1].color,
+			context->grid.colors[pi2].color, 0.5);
 	while (i < context->line_size)
 		buffer[i++] = col;
 	return (buffer);

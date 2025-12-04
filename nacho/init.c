@@ -28,7 +28,7 @@ static void	flush_inputs(t_ncontext *nacho)
 	while (i < NACHO_BUTTON_SCANCODE_LENGTH)
 		nacho->inputs.btn[i++] = false;
 	nacho_flush_inputs(nacho);
-	nacho->inputs.record_mouse = true;
+	nacho->inputs.last_key = 0;
 	nacho->inputs.should_exit = false;
 }
 

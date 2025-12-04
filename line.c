@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "includes/fdf.h"
+#include "nacho/MacroLibX-2.2.2/includes/mlx.h"
 
 static void	put_line_step(t_context *context,
 		t_vec2 pos, bool steep, mlx_color *buffer)
@@ -56,5 +57,4 @@ void	line_put(t_context *context,
 			pos1.y += s.y;
 		}
 	}
-	free(buffer);
 }

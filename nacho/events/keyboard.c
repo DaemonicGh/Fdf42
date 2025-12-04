@@ -23,6 +23,7 @@ void	key_down_hook(int key, void *param)
 		return ;
 	nacho->inputs.key[key] = true;
 	nacho->inputs.keyp[key] = true;
+	nacho->inputs.last_key = key;
 }
 
 void	key_up_hook(int key, void *param)

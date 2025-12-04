@@ -12,7 +12,7 @@
 
 #include "includes/fdf.h"
 
-static void	draw_grid_forward(t_context *context)
+static void	draw_grid_forward(t_context *context, mlx_color *buffer)
 {
 	int		i;
 	t_vec3	pos;
@@ -25,18 +25,19 @@ static void	draw_grid_forward(t_context *context)
 		if (pos.x > 0 && (!should_cull_line(context->nacho,
 					context->proj_grid[i], context->proj_grid[i - 1])))
 			line_put(context, context->proj_grid[i], context->proj_grid[i - 1],
-				get_line_color_region(context, i, i - 1));
+				get_line_color_region(context, i, i - 1, buffer));
 		if (pos.y > 0 && (!should_cull_line(context->nacho,
 					context->proj_grid[i],
 					context->proj_grid[i - context->grid.width])))
 			line_put(context, context->proj_grid[i],
 				context->proj_grid[i - context->grid.width],
-				get_line_color_region(context, i, i - context->grid.width));
+				get_line_color_region(context,
+					i, i - context->grid.width, buffer));
 		i++;
 	}
 }
 
-static void	draw_grid_rightward(t_context *context)
+static void	draw_grid_rightward(t_context *context, mlx_color *buffer)
 {
 	int		i;
 	t_vec3	pos;
@@ -49,13 +50,14 @@ static void	draw_grid_rightward(t_context *context)
 		if (pos.x > 0 && (!should_cull_line(context->nacho,
 					context->proj_grid[i], context->proj_grid[i - 1])))
 			line_put(context, context->proj_grid[i], context->proj_grid[i - 1],
-				get_line_color_region(context, i, i - 1));
+				get_line_color_region(context, i, i - 1, buffer));
 		if (pos.y + 1 < context->grid.height && (!should_cull_line(
 					context->nacho, context->proj_grid[i],
 					context->proj_grid[i + context->grid.width])))
 			line_put(context, context->proj_grid[i],
 				context->proj_grid[i + context->grid.width],
-				get_line_color_region(context, i, i + context->grid.width));
+				get_line_color_region(context,
+					i, i + context->grid.width, buffer));
 		if (i + 1 == context->grid.width)
 			break ;
 		if (pos.y == 0)
@@ -64,7 +66,7 @@ static void	draw_grid_rightward(t_context *context)
 	}
 }
 
-static void	draw_grid_backward(t_context *context)
+static void	draw_grid_backward(t_context *context, mlx_color *buffer)
 {
 	int		i;
 	t_vec3	pos;
@@ -78,18 +80,19 @@ static void	draw_grid_backward(t_context *context)
 					context->nacho, context->proj_grid[i],
 					context->proj_grid[i + 1])))
 			line_put(context, context->proj_grid[i], context->proj_grid[i + 1],
-				get_line_color_region(context, i, i + 1));
+				get_line_color_region(context, i, i + 1, buffer));
 		if (pos.y + 1 < context->grid.height && (!should_cull_line(
 					context->nacho, context->proj_grid[i],
 					context->proj_grid[i + context->grid.width])))
 			line_put(context, context->proj_grid[i],
 				context->proj_grid[i + context->grid.width],
-				get_line_color_region(context, i, i + context->grid.width));
+				get_line_color_region(context,
+					i, i + context->grid.width, buffer));
 		i--;
 	}
 }
 
-static void	draw_grid_leftward(t_context *context)
+static void	draw_grid_leftward(t_context *context, mlx_color *b)
 {
 	int		i;
 	t_vec3	pos;
@@ -103,13 +106,13 @@ static void	draw_grid_leftward(t_context *context)
 					context->nacho, context->proj_grid[i],
 					context->proj_grid[i + 1])))
 			line_put(context, context->proj_grid[i], context->proj_grid[i + 1],
-				get_line_color_region(context, i, i + 1));
+				get_line_color_region(context, i, i + 1, b));
 		if (pos.y > 0 && (!should_cull_line(
 					context->nacho, context->proj_grid[i],
 					context->proj_grid[i - context->grid.width])))
 			line_put(context, context->proj_grid[i],
 				context->proj_grid[i - context->grid.width],
-				get_line_color_region(context, i, i - context->grid.width));
+				get_line_color_region(context, i, i - context->grid.width, b));
 		if (i == context->grid.size - context->grid.width)
 			break ;
 		if (pos.y + 1 == context->grid.height)
@@ -120,30 +123,20 @@ static void	draw_grid_leftward(t_context *context)
 
 void	draw_grid(t_context *context)
 {
-	if (context->line_size == 1)
-	{
-		if (context->cam.rotation.x < M_PI_2)
-			draw_grid_forward(context);
-		else if (context->cam.rotation.x >= M_PI_2
-			&& context->cam.rotation.x < M_PI)
-			draw_grid_rightward(context);
-		else if (context->cam.rotation.x >= M_PI
-			&& context->cam.rotation.x < M_PI + M_PI_2)
-			draw_grid_backward(context);
-		else
-			draw_grid_leftward(context);
-	}
- 	else
-	{
-		if (context->cam.rotation.x < M_PI_2)
-			draw_grid_forward(context);
-		else if (context->cam.rotation.x >= M_PI_2
-			&& context->cam.rotation.x < M_PI)
-			draw_grid_rightward(context);
-		else if (context->cam.rotation.x >= M_PI
-			&& context->cam.rotation.x < M_PI + M_PI_2)
-			draw_grid_backward(context);
-		else
-			draw_grid_leftward(context);
-	}
+	mlx_color	*buffer;
+
+	buffer = malloc(sizeof(mlx_color) * context->line_size);
+	if (!buffer)
+		put_exit(1, "ERROR: memory error during rendering!");
+	if (context->cam.rotation.x < M_PI_2)
+		draw_grid_forward(context, buffer);
+	else if (context->cam.rotation.x >= M_PI_2
+		&& context->cam.rotation.x < M_PI)
+		draw_grid_rightward(context, buffer);
+	else if (context->cam.rotation.x >= M_PI
+		&& context->cam.rotation.x < M_PI + M_PI_2)
+		draw_grid_backward(context, buffer);
+	else
+		draw_grid_leftward(context, buffer);
+	free(buffer);
 }

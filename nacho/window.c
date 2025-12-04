@@ -50,7 +50,8 @@ void	nacho_refresh_window(t_ncontext *nacho)
 	mlx_set_window_size(nacho->mlx, nacho->window.win,
 		nacho->window.width, nacho->window.height);
 	mlx_set_window_title(nacho->mlx, nacho->window.win, nacho->window.title);
-	mlx_set_window_fullscreen(nacho->mlx, nacho->window.win, nacho->window.is_fullscreen);
+	mlx_set_window_fullscreen(nacho->mlx,
+		nacho->window.win, nacho->window.is_fullscreen);
 }
 
 void	nacho_center_window(t_ncontext *nacho)
@@ -58,6 +59,7 @@ void	nacho_center_window(t_ncontext *nacho)
 	t_vec2	screen;
 
 	mlx_get_screen_size(nacho->mlx, nacho->window.win, &screen.x, &screen.y);
- 	mlx_set_window_position(nacho->mlx, nacho->window.win,
-		screen.x / 2 - nacho->window.width / 2, screen.y / 2 - nacho->window.height / 2);
+	mlx_set_window_position(nacho->mlx, nacho->window.win,
+		screen.x / 2 - nacho->window.width / 2,
+		screen.y / 2 - nacho->window.height / 2);
 }

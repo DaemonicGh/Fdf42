@@ -43,7 +43,7 @@ void	handle_camera_movement(t_context *context)
 
 void	update_rotation(t_context *context)
 {
-	if (!context->nacho->inputs.record_mouse)
+	if (!context->record_mouse)
 		return ;
 	if (!context->nacho->inputs.btn[NACHO_BUTTON_LEFT])
 	{

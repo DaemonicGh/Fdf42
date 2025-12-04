@@ -41,6 +41,7 @@ void	nacho_fill_image(t_ncontext *nacho, t_nimage image, mlx_color color)
 	i = 0;
 	while (i < image.width * image.height)
 		buffer[i++] = color;
- 	mlx_set_image_region(nacho->mlx, image.img, 0, 0, image.width, image.height, buffer);
+	mlx_set_image_region(nacho->mlx, image.img, 0, 0,
+		image.width, image.height, buffer);
 	free(buffer);
 }

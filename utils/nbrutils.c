@@ -38,25 +38,46 @@ int	ft_atoi(const char *str)
 	return (nbr * sgn);
 }
 
-static void	putnbr(int nbr)
+int	nbrlen_base(int nbr, int base)
 {
-	if (nbr >= 10)
-		putnbr(nbr / 10);
-	nbr = nbr % 10 + '0';
-	write(1, &nbr, 1);
+	int size;
+
+ 	size = nbr <= 0;
+ 	while (nbr != 0)
+	{
+   		nbr /= base;
+  		size++;
+	}
+ 	return (size);
 }
 
-void	ft_putnbr(int nbr)
+static void	putnbr_fd(int fd, int nbr)
+{
+	if (nbr >= 10)
+		putnbr_fd(fd, nbr / 10);
+	nbr = nbr % 10 + '0';
+	write(fd, &nbr, 1);
+}
+
+void	ft_putnbr_fd(int fd, int nbr)
 {
 	if (nbr == -2147483648)
 	{
-		write(1, "-2147483648", 11);
+		write(fd, "-2147483648", 11);
 		return ;
 	}
 	if (nbr < 0)
 	{
-		write(1, "-", 1);
+		write(fd, "-", 1);
 		nbr = -nbr;
 	}
-	putnbr(nbr);
+	putnbr_fd(fd, nbr);
+}
+
+void	ft_putuhex_fd(int fd, unsigned int nbr)
+{
+	const char	*hex = "0123456789ABCDEF";
+	if (nbr >= 16)
+		ft_putuhex_fd(fd, nbr / 16);
+	write(fd, &hex[nbr % 16], 1);
 }

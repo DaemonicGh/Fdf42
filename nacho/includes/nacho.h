@@ -26,7 +26,8 @@
 
 t_nimage	nacho_make_image(t_ncontext *nacho, int width, int height);
 t_nimage	nacho_make_image_from_mlx(mlx_image image, int width, int height);
-void		nacho_fill_image(t_ncontext *nacho, t_nimage image, mlx_color color);
+void		nacho_fill_image(t_ncontext *nacho,
+				t_nimage image, mlx_color color);
 
 t_nwindow	nacho_make_window(t_ncontext *nacho,
 				t_vec2 size, char *title, int mode);

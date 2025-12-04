@@ -40,10 +40,14 @@ static void	iso_key_inputs(t_context *context)
 {
 	if (context->nacho->inputs.keyp[NACHO_KEY_SPACE])
 	{
-		context->nacho->inputs.record_mouse
-			= !context->nacho->inputs.record_mouse;
+		context->record_mouse
+			= !context->record_mouse;
 		nacho_warp_mouse(context->nacho, context->nacho->viewport.width / 2,
 			context->nacho->viewport.height / 2);
+		if (context->record_mouse)
+			mlx_mouse_hide(context->nacho->mlx);
+		else
+			mlx_mouse_show(context->nacho->mlx);
 	}
 	handle_camera_movement(context);
 	iso_config_key_inputs(context);
@@ -67,9 +71,8 @@ void	handle_key_inputs(t_context *context)
 		nacho_center_window(context->nacho);
 	if (context->nacho->inputs.keyp[NACHO_KEY_ESCAPE])
 		context->nacho->inputs.should_exit = true;
- 	if (context->nacho->inputs.key[NACHO_KEY_LCTRL]
-		&& context->nacho->inputs.keyp[NACHO_KEY_S])
-   		save_grid(context);
+	if (context->nacho->inputs.key[NACHO_KEY_ENTER])
+		save_grid(context);
 	if (context->nacho->inputs.keyp[NACHO_KEY_TAB])
 		toggle_heightmap(context);
 	if (context->heightmap_mode)

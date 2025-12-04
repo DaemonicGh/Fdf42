@@ -29,16 +29,16 @@ void	nacho_start_frame(t_ncontext *nacho)
 
 void	nacho_end_frame(t_ncontext *nacho)
 {
+	nacho_refresh_window(nacho);
 	nacho_flush_inputs(nacho);
- 	nacho_refresh_window(nacho);
 	nacho->frame_elapsed++;
 }
 
 static void	nacho_loop(void *rawcontext)
 {
 	static struct timeval	start;
- 	static struct timeval	end;
-	t__nloopcontext	*context;
+	struct timeval			end;
+	t__nloopcontext			*context;
 
 	context = rawcontext;
 	gettimeofday(&end, NULL);

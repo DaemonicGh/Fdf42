@@ -23,14 +23,14 @@ static void	handle_heightmap_mouse(t_context *context)
 	}
 	if (context->nacho->inputs.btnp[NACHO_BUTTON_LEFT])
 		update_point(context, vec2_new(context->heightmap.focus.x,
-				context->heightmap.focus.y), 1
-					* (10 * context->nacho->inputs.key[NACHO_KEY_LALT])
-					* (100 * context->nacho->inputs.key[NACHO_KEY_LCTRL]));
+				context->heightmap.focus.y), pow(10,
+				context->nacho->inputs.key[NACHO_KEY_LALT]
+				+ context->nacho->inputs.key[NACHO_KEY_LCTRL] * 2));
 	else if (context->nacho->inputs.btnp[NACHO_BUTTON_RIGHT])
 		update_point(context, vec2_new(context->heightmap.focus.x,
-				context->heightmap.focus.y), -1
-					* (10 * context->nacho->inputs.key[NACHO_KEY_LALT])
-					* (100 * context->nacho->inputs.key[NACHO_KEY_LCTRL]));
+				context->heightmap.focus.y), -pow(10,
+				context->nacho->inputs.key[NACHO_KEY_LALT]
+				+ context->nacho->inputs.key[NACHO_KEY_LCTRL] * 2));
 }
 
 void	handle_heightmap_movement(t_context *context)
@@ -51,7 +51,7 @@ void	handle_heightmap_movement(t_context *context)
 		|| context->nacho->inputs.key[NACHO_KEY_RIGHT])
 		context->heightmap.disp.x += HEIGHTMAP_DISP_SPEED
 			/ context->heightmap.zoom;
- 	handle_heightmap_mouse(context);
+	handle_heightmap_mouse(context);
 }
 
 void	handle_heightmap_scroll(t_context *context)
