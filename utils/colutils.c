@@ -26,9 +26,3 @@ mlx_color	color_lerp(mlx_color col1, mlx_color col2, float t)
 		.b = (1 - t) * col1.b + t * col2.b,
 		.a = (1 - t) * col1.a + t * col2.a});
 }
-
-bool	point_on_screen(t_context *context, t_vec2 p)
-{
-	return (p.x >= 0 && p.x < context->nacho->viewport.width
-		&& p.y >= 0 && p.y < context->nacho->viewport.height);
-}

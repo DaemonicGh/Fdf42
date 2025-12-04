@@ -37,20 +37,17 @@ void		nacho_center_window(t_ncontext *nacho);
 
 void		nacho_run(t_ncontext *nacho,
 				void (*update)(void *args), void *args);
-
 t_ncontext	*nacho_init(t_vec2 win_size, char *win_title, int win_mode);
+void		nacho_exit(t_ncontext *nacho);
 
 void		nacho_start_events(t_ncontext *nacho);
+void		nacho_flush_inputs(t_ncontext *nacho);
 void		key_down_hook(int key, void *param);
 void		key_up_hook(int key, void *param);
 void		mouse_down_hook(int button, void *param);
 void		mouse_up_hook(int button, void *param);
 void		mouse_wheel_hook(int button, void *param);
-void		nacho_flush_inputs(t_ncontext *nacho);
 void		window_hook(int event, void *param);
-
-void		nacho_exit(t_ncontext *nacho);
-
 void		nacho_warp_mouse(t_ncontext *nacho, int x, int y);
 
 #endif

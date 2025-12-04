@@ -20,7 +20,7 @@ LIBFLAGS := -lSDL2 -lm
 
 SRCF := camera exit fps grid heightmap heightmap_inputs init inputs keyboard_inputs \
 		line main overlay overlay_spe parsing projection rendering \
-		utils/gridutils utils/mathutils utils/mlxutils \
+		utils/colutils utils/gridutils utils/mathutils \
 		utils/nbrutils utils/parseutils utils/strutils
 
 SRC := $(addsuffix .c, $(SRCF))

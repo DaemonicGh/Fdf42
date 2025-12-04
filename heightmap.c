@@ -83,15 +83,15 @@ void	update_heightmap_focus(t_context *context)
 
 	col = mlx_get_image_pixel(context->nacho->mlx, context->heightmap.img,
 			context->heightmap.focus.x, context->heightmap.focus.y);
-	col.g = col.r;
-	col.b = col.r;
+	col = normalize_z_color(&context->grid, context->heightmap.focus.z);
 	mlx_set_image_pixel(context->nacho->mlx, context->heightmap.img,
 		context->heightmap.focus.x, context->heightmap.focus.y, col);
 	update_focus(context);
 	col = mlx_get_image_pixel(context->nacho->mlx, context->heightmap.img,
 			context->heightmap.focus.x, context->heightmap.focus.y);
-	col.g = 0x00;
-	col.b = 0xFF;
+	col = color_lerp(color(LOW_HEIGHTMAP_FOCUS_COLOR),
+			color(HIGH_HEIGHTMAP_FOCUS_COLOR),
+			normalize_z(&context->grid, context->heightmap.focus.z));
 	mlx_set_image_pixel(context->nacho->mlx, context->heightmap.img,
 		context->heightmap.focus.x, context->heightmap.focus.y, col);
 }

@@ -24,14 +24,14 @@ static void	iso_config_key_inputs(t_context *context)
 			color_grid(&context->grid,
 				color(BASE_LINE_COLOR), color(BASE_LINE_COLOR));
 	}
-	if (context->nacho->inputs.keyp[NACHO_KEY_R])
-		context->line_size = min(context->line_size + 1, 8);
-	if (context->nacho->inputs.keyp[NACHO_KEY_F])
-		context->line_size = max(context->line_size - 1, 1);
-	if (context->nacho->inputs.key[NACHO_KEY_T])
+	if (context->nacho->inputs.keyp[NACHO_KEY_T])
+		context->line_size = min(context->line_size + 1, MAX_LINE_SIZE);
+	if (context->nacho->inputs.keyp[NACHO_KEY_G])
+		context->line_size = max(context->line_size - 1, MIN_LINE_SIZE);
+	if (context->nacho->inputs.key[NACHO_KEY_R])
 		context->cam.height_mod *= 1
 			+ context->nacho->delta_time * HEIGHT_MOD_AMPLIFIER;
-	if (context->nacho->inputs.key[NACHO_KEY_G])
+	if (context->nacho->inputs.key[NACHO_KEY_F])
 		context->cam.height_mod /= 1
 			+ context->nacho->delta_time * HEIGHT_MOD_AMPLIFIER;
 }

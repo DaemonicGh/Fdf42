@@ -79,8 +79,6 @@ static void	fill_grid(const char *str, t_grid *grid)
 		if (!str[i])
 			return ;
 		grid->grid[j] = ft_atoi(str + i);
-		grid->min = min(grid->grid[j], grid->min);
-		grid->max = max(grid->grid[j], grid->max);
 		while (str[i] == '-' || (str[i] >= '0' && str[i] <= '9'))
 			i++;
 		handle_colors(str, grid, &i, &j);
@@ -111,9 +109,8 @@ t_grid	get_grid(char *file)
 		free(grid.grid);
 		return (grid);
 	}
-	grid.min = INT_MAX;
-	grid.max = INT_MIN;
 	fill_grid(str, &grid);
+	update_grid_limits(&grid);
 	color_grid(&grid, color(LOW_LINE_COLOR), color(HIGH_LINE_COLOR));
 	free((char *)str);
 	return (grid);
