@@ -35,7 +35,9 @@ typedef struct s_grid
 
 typedef struct s_camera
 {
-	t_vec3f	rotation;
+	t_vec2f	rotation;
+	t_vec2f	rotation_cos;
+	t_vec2f	rotation_sin;
 	float	zoom;
 	t_vec2	disp;
 	t_vec3f	focus;

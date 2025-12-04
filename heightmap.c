@@ -31,7 +31,7 @@ void	update_heightmap_colors(t_context *context, mlx_image image)
 
 	buffer = malloc(sizeof(mlx_color) * context->grid.size);
 	if (!buffer)
-		exit_mlx(context, 1, "ERROR: memory error during heightmap refresh");
+		free_exit(context, 1, "ERROR: memory error during heightmap refresh");
 	i = 0;
 	while (i < context->grid.size)
 	{

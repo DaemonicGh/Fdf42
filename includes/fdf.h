@@ -35,9 +35,11 @@ void			update_grid_limits(t_grid *grid);
 void			update_point(t_context *context, t_vec2 point, int increment);
 
 void			handle_camera_movement(t_context *context);
+void			set_rotation_x(t_cam *cam, float x);
+void			set_rotation_y(t_cam *cam, float y);
 void			update_rotation(t_context *context);
 
-t_context		init_window(t_grid *grid, char *file);
+t_context		init_context(t_grid *grid, char *file);
 
 void			handle_key_inputs(t_context *context);
 void			update_inputs(t_context *context);
@@ -49,10 +51,12 @@ mlx_color		color(unsigned int hex);
 mlx_color		color_lerp(mlx_color col1, mlx_color col2, float t);
 bool			point_on_screen(t_context *context, t_vec2 p);
 void			put_exit(int status, char *message);
-void			exit_mlx(t_context *context, int status, char *message);
+void			free_exit(t_context *context, int status, char *message);
 
 void			line_put(t_context *context,
 					t_vec2 pos1, t_vec2 pos2, mlx_color *buffer);
+void			draw_line(t_context *context,
+					int p1, int p2, mlx_color *buffer);
 
 t_vec2			project_iso(t_cam *cam, t_vec3 p);
 mlx_color		*get_line_color_region(t_context *context,

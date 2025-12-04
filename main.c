@@ -48,7 +48,7 @@ void	update(void *param)
 
 	context = param;
 	if (context->nacho->inputs.should_exit)
-		exit_mlx(context, 0, "Exited successfully!");
+		free_exit(context, 0, "Exited successfully!");
 	update_inputs(context);
 	update_fps(context);
 	if (context->heightmap_mode)
@@ -70,9 +70,9 @@ void	init(char *file)
 	grid = get_grid(file);
 	if (!grid.grid || !grid.colors)
 		put_exit(1, "ERROR: Memory error during parsing!");
-	context = init_window(&grid, file);
+	context = init_context(&grid, file);
 	nacho_run(context.nacho, update, &context);
-	exit_mlx(&context, 0, "Exited succesfully!");
+	free_exit(&context, 0, "Exited succesfully!");
 }
 
 int	main(int ac, char **av)

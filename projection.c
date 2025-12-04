@@ -22,17 +22,10 @@ static void	draw_grid_forward(t_context *context, mlx_color *buffer)
 	{
 		pos = get_cell_at_i(&context->grid, i);
 		context->proj_grid[i] = project_iso(&context->cam, pos);
-		if (pos.x > 0 && (!should_cull_line(context->nacho,
-					context->proj_grid[i], context->proj_grid[i - 1])))
-			line_put(context, context->proj_grid[i], context->proj_grid[i - 1],
-				get_line_color_region(context, i, i - 1, buffer));
-		if (pos.y > 0 && (!should_cull_line(context->nacho,
-					context->proj_grid[i],
-					context->proj_grid[i - context->grid.width])))
-			line_put(context, context->proj_grid[i],
-				context->proj_grid[i - context->grid.width],
-				get_line_color_region(context,
-					i, i - context->grid.width, buffer));
+		if (pos.x > 0)
+			draw_line(context, i, i - 1, buffer);
+		if (pos.y > 0)
+			draw_line(context, i, i - context->grid.width, buffer);
 		i++;
 	}
 }
@@ -47,17 +40,10 @@ static void	draw_grid_rightward(t_context *context, mlx_color *buffer)
 	{
 		pos = get_cell_at_i(&context->grid, i);
 		context->proj_grid[i] = project_iso(&context->cam, pos);
-		if (pos.x > 0 && (!should_cull_line(context->nacho,
-					context->proj_grid[i], context->proj_grid[i - 1])))
-			line_put(context, context->proj_grid[i], context->proj_grid[i - 1],
-				get_line_color_region(context, i, i - 1, buffer));
-		if (pos.y + 1 < context->grid.height && (!should_cull_line(
-					context->nacho, context->proj_grid[i],
-					context->proj_grid[i + context->grid.width])))
-			line_put(context, context->proj_grid[i],
-				context->proj_grid[i + context->grid.width],
-				get_line_color_region(context,
-					i, i + context->grid.width, buffer));
+		if (pos.x > 0)
+			draw_line(context, i, i - 1, buffer);
+		if (pos.y + 1 < context->grid.height)
+			draw_line(context, i, i + context->grid.width, buffer);
 		if (i + 1 == context->grid.width)
 			break ;
 		if (pos.y == 0)
@@ -76,23 +62,15 @@ static void	draw_grid_backward(t_context *context, mlx_color *buffer)
 	{
 		pos = get_cell_at_i(&context->grid, i);
 		context->proj_grid[i] = project_iso(&context->cam, pos);
-		if (pos.x + 1 < context->grid.width && (!should_cull_line(
-					context->nacho, context->proj_grid[i],
-					context->proj_grid[i + 1])))
-			line_put(context, context->proj_grid[i], context->proj_grid[i + 1],
-				get_line_color_region(context, i, i + 1, buffer));
-		if (pos.y + 1 < context->grid.height && (!should_cull_line(
-					context->nacho, context->proj_grid[i],
-					context->proj_grid[i + context->grid.width])))
-			line_put(context, context->proj_grid[i],
-				context->proj_grid[i + context->grid.width],
-				get_line_color_region(context,
-					i, i + context->grid.width, buffer));
+		if (pos.x + 1 < context->grid.width)
+			draw_line(context, i, i + 1, buffer);
+		if (pos.y + 1 < context->grid.height)
+			draw_line(context, i, i + context->grid.width, buffer);
 		i--;
 	}
 }
 
-static void	draw_grid_leftward(t_context *context, mlx_color *b)
+static void	draw_grid_leftward(t_context *context, mlx_color *buffer)
 {
 	int		i;
 	t_vec3	pos;
@@ -102,17 +80,10 @@ static void	draw_grid_leftward(t_context *context, mlx_color *b)
 	{
 		pos = get_cell_at_i(&context->grid, i);
 		context->proj_grid[i] = project_iso(&context->cam, pos);
-		if (pos.x + 1 < context->grid.width && (!should_cull_line(
-					context->nacho, context->proj_grid[i],
-					context->proj_grid[i + 1])))
-			line_put(context, context->proj_grid[i], context->proj_grid[i + 1],
-				get_line_color_region(context, i, i + 1, b));
-		if (pos.y > 0 && (!should_cull_line(
-					context->nacho, context->proj_grid[i],
-					context->proj_grid[i - context->grid.width])))
-			line_put(context, context->proj_grid[i],
-				context->proj_grid[i - context->grid.width],
-				get_line_color_region(context, i, i - context->grid.width, b));
+		if (pos.x + 1 < context->grid.width)
+			draw_line(context, i, i + 1, buffer);
+		if (pos.y > 0)
+			draw_line(context, i, i - context->grid.width, buffer);
 		if (i == context->grid.size - context->grid.width)
 			break ;
 		if (pos.y + 1 == context->grid.height)

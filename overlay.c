@@ -37,12 +37,12 @@ void	draw_monitor_save_str(t_context *context)
 {
 	if (context->is_save_success)
 		mlx_string_put(context->nacho->mlx, context->nacho->viewport.win,
-			context->nacho->viewport.width / 2 - 132,
+			context->nacho->viewport.width / 2 - 88,
 			context->nacho->viewport.height - 2, color(TEXT_COLOR),
 			"MAP SAVED SUCCESSFULLY");
 	else
 		mlx_string_put(context->nacho->mlx, context->nacho->viewport.win,
-			context->nacho->viewport.width / 2 - 120,
+			context->nacho->viewport.width / 2 - 80,
 			context->nacho->viewport.height - 2, color(TEXT_COLOR_ERROR),
 			"ERROR DURING SAVING!");
 }

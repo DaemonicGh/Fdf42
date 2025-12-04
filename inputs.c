@@ -46,19 +46,19 @@ static void	handle_mouse_inputs(t_context *context)
 		return ;
 	}
 	if (context->nacho->inputs.btn[NACHO_BUTTON_LEFT])
-		context->cam.rotation.y = roundf(clamp(context->cam.rotation.y,
-					0, M_PI) / M_PI_4) * M_PI_4;
+		set_rotation_y(&context->cam, roundf(clamp(context->cam.rotation.y,
+					0, M_PI) / M_PI_4) * M_PI_4);
 	if (context->nacho->inputs.btn[NACHO_BUTTON_RIGHT])
-		context->cam.rotation.x = roundf(loop(context->cam.rotation.x,
-					0, M_PI * 2) / M_PI_4) * M_PI_4;
+		set_rotation_x(&context->cam, roundf(loop(context->cam.rotation.x,
+					0, M_PI * 2) / M_PI_4) * M_PI_4);
 	if (context->nacho->inputs.btn[NACHO_BUTTON_MIDDLE])
 	{
-		context->cam.rotation.x = roundf(loop(context->cam.rotation.x + M_PI_4,
-					0, M_PI * 2) / M_PI_2) * M_PI_2 - M_PI_4;
+		set_rotation_x(&context->cam, roundf(loop(context->cam.rotation.x
+					+ M_PI_4, 0, M_PI * 2) / M_PI_2) * M_PI_2 - M_PI_4);
 		if (context->cam.rotation.y >= M_PI_2)
-			context->cam.rotation.y = M_PI_2 + 0.61548;
+			set_rotation_y(&context->cam, M_PI_2 + 0.61548);
 		else
-			context->cam.rotation.y = M_PI_2 - 0.61548;
+			set_rotation_y(&context->cam, M_PI_2 - 0.61548);
 	}
 	handle_scroll(context);
 }

@@ -81,7 +81,7 @@ static void	fill_grid(const char *str, t_grid *grid)
 		grid->grid[j] = ft_atoi(str + i);
 		grid->min = min(grid->grid[j], grid->min);
 		grid->max = max(grid->grid[j], grid->max);
-		while (str[i] >= '0' && str[i] <= '9')
+		while (str[i] == '-' || (str[i] >= '0' && str[i] <= '9'))
 			i++;
 		handle_colors(str, grid, &i, &j);
 		j++;
@@ -99,9 +99,18 @@ t_grid	get_grid(char *file)
 		put_exit(1, "ERROR: Couldn't parse given file!");
 	get_grid_size(str, &grid);
 	grid.grid = malloc(sizeof(int) * grid.size);
-	grid.colors = malloc(sizeof(t_gridcolor) * grid.size);
-	if (!grid.grid && !grid.colors)
+	if (!grid.grid)
+	{
+		free((char *)str);
 		return (grid);
+	}
+	grid.colors = malloc(sizeof(t_gridcolor) * grid.size);
+	if (!grid.colors)
+	{
+		free((char *)str);
+		free(grid.grid);
+		return (grid);
+	}
 	grid.min = INT_MAX;
 	grid.max = INT_MIN;
 	fill_grid(str, &grid);

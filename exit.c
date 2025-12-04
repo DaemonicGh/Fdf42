@@ -24,7 +24,7 @@ void	put_exit(int status, char *message)
 	exit(status);
 }
 
-void	exit_mlx(t_context *context, int status, char *message)
+void	free_exit(t_context *context, int status, char *message)
 {
 	mlx_destroy_image(context->nacho->mlx, context->crosshair);
 	mlx_destroy_image(context->nacho->mlx, context->heightmap.img);

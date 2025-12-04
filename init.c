@@ -16,7 +16,9 @@ static t_cam	init_camera(t_context *context)
 {
 	t_cam	cam;
 
-	cam.rotation = vec3f_new(0, 0, 0);
+	cam.rotation = vec2f_new(0, 0);
+	cam.rotation_cos = vec2f_new(1, 1);
+	cam.rotation_sin = vec2f_new(0, 0);
 	cam.disp = vec2_new(context->nacho->viewport.width / 2,
 			context->nacho->viewport.height / 2);
 	cam.zoom = 12.0;
@@ -28,6 +30,16 @@ static t_cam	init_camera(t_context *context)
 	return (cam);
 }
 
+static void	init_context_values(t_context *context, char *file)
+{
+	context->line_size = 3;
+	context->colorize_grid = true;
+	context->record_mouse = true;
+	context->heightmap_mode = false;
+	context->file = file;
+	context->is_save_success = false;
+}
+
 static void	fill_fps_array(float *fps, int size)
 {
 	int	i;
@@ -37,27 +49,26 @@ static void	fill_fps_array(float *fps, int size)
 		fps[i++] = 0;
 }
 
-t_context	init_window(t_grid *grid, char *file)
+t_context	init_context(t_grid *grid, char *file)
 {
 	t_context	context;
 
-	context.nacho = nacho_init(vec2_new(WINDOW_WIDTH, WINDOW_HEIGHT),
-			WINDOW_TITLE, WINDOW_FLAGS);
 	context.grid = *grid;
 	context.proj_grid = malloc(context.grid.size * sizeof(t_vec2));
 	if (!context.proj_grid)
-		exit_mlx(&context, 1, "ERROR: memory error during initalization!");
-	context.line_size = 3;
-	context.colorize_grid = true;
-	context.cam = init_camera(&context);
-	context.record_mouse = true;
-	context.heightmap_mode = false;
-	context.heightmap = make_heightmap(&context);
+	{
+		free(grid->grid);
+		free(grid->colors);
+		put_exit(1, "ERROR: memory error during initalization!");
+	}
+	init_context_values(&context, file);
 	fill_fps_array(context.fps_record, FPS_ARRAY_SIZE);
+	context.nacho = nacho_init(vec2_new(WINDOW_WIDTH, WINDOW_HEIGHT),
+			WINDOW_TITLE, WINDOW_FLAGS);
+	context.cam = init_camera(&context);
 	context.crosshair = mlx_new_image_from_file(context.nacho->mlx,
 			"assets/crosshair.png", NULL, NULL);
-	context.file = file;
-	context.is_save_success = false;
+	context.heightmap = make_heightmap(&context);
 	mlx_mouse_hide(context.nacho->mlx);
 	mlx_set_fps_goal(context.nacho->mlx, 60);
 	return (context);

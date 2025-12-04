@@ -25,20 +25,37 @@ void	handle_camera_movement(t_context *context)
 {
 	const int	speed = context->nacho->inputs.key[NACHO_KEY_LSHIFT]
 		* CAMERA_SPEED_ADD + CAMERA_SPEED;
-	const float	angle = context->cam.rotation.x;
 
 	if (context->nacho->inputs.key[NACHO_KEY_W]
 		|| context->nacho->inputs.key[NACHO_KEY_UP])
-		move_cam(context, vec2f_new(-sinf(angle), -cosf(angle)), speed);
+		move_cam(context, vec2f_new(-context->cam.rotation_sin.x,
+				-context->cam.rotation_cos.x), speed);
 	if (context->nacho->inputs.key[NACHO_KEY_A]
 		|| context->nacho->inputs.key[NACHO_KEY_LEFT])
-		move_cam(context, vec2f_new(-cosf(angle), sinf(angle)), speed);
+		move_cam(context, vec2f_new(-context->cam.rotation_cos.x,
+				context->cam.rotation_sin.x), speed);
 	if (context->nacho->inputs.key[NACHO_KEY_S]
 		|| context->nacho->inputs.key[NACHO_KEY_DOWN])
-		move_cam(context, vec2f_new(sinf(angle), cosf(angle)), speed);
+		move_cam(context, vec2f_new(context->cam.rotation_sin.x,
+				context->cam.rotation_cos.x), speed);
 	if (context->nacho->inputs.key[NACHO_KEY_D]
 		|| context->nacho->inputs.key[NACHO_KEY_RIGHT])
-		move_cam(context, vec2f_new(cosf(angle), -sinf(angle)), speed);
+		move_cam(context, vec2f_new(context->cam.rotation_cos.x,
+				-context->cam.rotation_sin.x), speed);
+}
+
+void	set_rotation_x(t_cam *cam, float x)
+{
+	cam->rotation.x = x;
+	cam->rotation_cos.x = cosf(x);
+	cam->rotation_sin.x = sinf(x);
+}
+
+void	set_rotation_y(t_cam *cam, float y)
+{
+	cam->rotation.y = y;
+	cam->rotation_cos.y = cosf(y);
+	cam->rotation_sin.y = sinf(y);
 }
 
 void	update_rotation(t_context *context)
@@ -47,15 +64,17 @@ void	update_rotation(t_context *context)
 		return ;
 	if (!context->nacho->inputs.btn[NACHO_BUTTON_LEFT])
 	{
-		context->cam.rotation.y += (context->nacho->viewport.height / 2
-				- context->nacho->inputs.mouse.y) * MOUSE_SENSITIVITY;
-		context->cam.rotation.y = clamp(context->cam.rotation.y, 0, M_PI);
+		set_rotation_y(&context->cam, clamp(context->cam.rotation.y
+				+ (context->nacho->viewport.height / 2
+					- context->nacho->inputs.mouse.y)
+				* MOUSE_SENSITIVITY, 0, M_PI));
 	}
 	if (!context->nacho->inputs.btn[NACHO_BUTTON_RIGHT])
 	{
-		context->cam.rotation.x += (context->nacho->viewport.width / 2
-				- context->nacho->inputs.mouse.x) * MOUSE_SENSITIVITY;
-		context->cam.rotation.x = loop(context->cam.rotation.x, 0, M_PI * 2);
+		set_rotation_x(&context->cam, loop(context->cam.rotation.x
+				+ (context->nacho->viewport.width / 2
+					- context->nacho->inputs.mouse.x)
+				* MOUSE_SENSITIVITY, 0, M_PI * 2));
 	}
 	nacho_warp_mouse(context->nacho, context->nacho->viewport.width / 2,
 		context->nacho->viewport.height / 2);
