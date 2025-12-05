@@ -20,7 +20,7 @@
 # define WINDOW_WIDTH 640
 # define WINDOW_HEIGHT 360
 # define WINDOW_TITLE "FdF"
-# define WINDOW_FLAGS 0b00
+# define WINDOW_FLAGS 0b10
 
 # define FPS_ARRAY_SIZE 20
 # define MAX_FPS 60

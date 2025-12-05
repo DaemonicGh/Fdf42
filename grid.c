@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "includes/fdf.h"
-#include <fcntl.h>
 
 void	color_grid(t_grid *grid, mlx_color col1, mlx_color col2)
 {
