@@ -23,7 +23,8 @@ void	color_grid(t_grid *grid, mlx_color col1, mlx_color col2)
 		while (i < grid->size)
 		{
 			if (!grid->colors[i].is_override)
-				grid->colors[i++].color = col1;
+				grid->colors[i].color = col1;
+			i++;
 		}
 	}
 	else
