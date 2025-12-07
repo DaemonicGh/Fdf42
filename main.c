@@ -68,8 +68,6 @@ void	init(char *file)
 	t_context	context;
 
 	grid = get_grid(file);
-	if (!grid.grid || !grid.colors)
-		put_exit(1, "ERROR: Memory error during parsing!");
 	context = init_context(&grid, file);
 	nacho_run(context.nacho, update, &context);
 	free_exit(&context, 0, "Exited succesfully!");

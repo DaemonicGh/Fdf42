@@ -38,7 +38,7 @@ static int	get_grid_width(const char *str)
 	return (width + !prev);
 }
 
-static void	get_grid_size(const char *str, t_grid *grid)
+static void	setup_grid(const char *str, t_grid *grid)
 {
 	int	i;
 
@@ -51,6 +51,12 @@ static void	get_grid_size(const char *str, t_grid *grid)
 	}
 	grid->width = get_grid_width(str);
 	grid->size = grid->width * grid->height;
+	grid->grid = malloc(sizeof(int) * grid->size);
+	if (!grid->grid)
+		return ;
+	grid->colors = malloc(sizeof(t_gridcolor) * grid->size);
+	if (!grid->colors)
+		free(grid->grid);
 }
 
 static void	handle_colors(const char *str, t_grid *grid, int *i, int *j)
@@ -90,24 +96,18 @@ static void	fill_grid(const char *str, t_grid *grid)
 
 t_grid	get_grid(char *file)
 {
-	const char	*str = read_all(open(file, O_RDONLY));
+	const int	fd = open(file, O_RDONLY);
+	const char	*str = read_all(fd);
 	t_grid		grid;
 
+	close(fd);
 	if (!str)
 		put_exit(1, "ERROR: Couldn't parse given file!");
-	get_grid_size(str, &grid);
-	grid.grid = malloc(sizeof(int) * grid.size);
-	if (!grid.grid)
+	setup_grid(str, &grid);
+	if (!grid.grid || !grid.colors)
 	{
 		free((char *)str);
-		return (grid);
-	}
-	grid.colors = malloc(sizeof(t_gridcolor) * grid.size);
-	if (!grid.colors)
-	{
-		free((char *)str);
-		free(grid.grid);
-		return (grid);
+		put_exit(1, "ERROR: Memory error during parsing!");
 	}
 	fill_grid(str, &grid);
 	update_grid_limits(&grid);
