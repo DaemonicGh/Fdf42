@@ -108,7 +108,7 @@ void	save_grid(t_context *context)
 
 	if (fd < 0)
 	{
-		write(2, "ERROR: Failed to open file when saving!\n", 39);
+		write(2, "ERROR: Failed to open file when saving!\n", 40);
 		context->is_save_success = false;
 		return ;
 	}

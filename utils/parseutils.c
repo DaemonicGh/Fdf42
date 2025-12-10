@@ -73,25 +73,22 @@ char	*read_all(int fd)
 	int			len;
 	char		*str;
 	char		*buf;
-	int			size_mod;
 
 	if (fd < 0 || fd >= 1024 || READ_BUFFER_SIZE <= 0)
 		return (NULL);
 	str = NULL;
-	size_mod = 1;
 	while (1)
 	{
-		buf = malloc(sizeof(char) * (READ_BUFFER_SIZE * size_mod + 1));
+		buf = malloc(sizeof(char) * (READ_BUFFER_SIZE + 1));
 		if (!buf)
 			return (NULL);
-		len = read(fd, buf, READ_BUFFER_SIZE * size_mod);
+		len = read(fd, buf, READ_BUFFER_SIZE);
 		if (len <= 0)
 			break ;
 		buf[len] = 0;
 		str = allocdstrjoin(str, buf, len);
-		if (len < READ_BUFFER_SIZE * size_mod)
+		if (len < READ_BUFFER_SIZE)
 			return (str);
-		size_mod *= 2;
 	}
 	free(buf);
 	if (len < 0)

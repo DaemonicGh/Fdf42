@@ -137,5 +137,4 @@ Displayed at the top of the screen:
 #### Configurable Parameters
 
 Additional constants and configuration options can be found in:
-
 `includes/fdf_constants.h`

@@ -40,15 +40,15 @@ int	ft_atoi(const char *str)
 
 int	nbrlen_base(int nbr, int base)
 {
-	int size;
+	int	size;
 
- 	size = nbr <= 0;
- 	while (nbr != 0)
+	size = nbr <= 0;
+	while (nbr != 0)
 	{
-   		nbr /= base;
-  		size++;
+		nbr /= base;
+		size++;
 	}
- 	return (size);
+	return (size);
 }
 
 static void	putnbr_fd(int fd, int nbr)
@@ -77,6 +77,7 @@ void	ft_putnbr_fd(int fd, int nbr)
 void	ft_putuhex_fd(int fd, unsigned int nbr)
 {
 	const char	*hex = "0123456789ABCDEF";
+
 	if (nbr >= 16)
 		ft_putuhex_fd(fd, nbr / 16);
 	write(fd, &hex[nbr % 16], 1);
