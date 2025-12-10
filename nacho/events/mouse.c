@@ -44,7 +44,7 @@ void	mouse_wheel_hook(int button, void *param)
 		return ;
 	nacho = param;
 	if (button == 1)
-		nacho->inputs.mouse_wheel = NACHO_SCROLL_UP;
+		nacho->inputs.mouse_wheel += NACHO_SCROLL_UP;
 	else if (button == 2)
-		nacho->inputs.mouse_wheel = NACHO_SCROLL_DOWN;
+		nacho->inputs.mouse_wheel += NACHO_SCROLL_DOWN;
 }
